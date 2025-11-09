@@ -5,7 +5,6 @@ const ChatMessage = ({ message, onSourceClick }) => {
   const isUser = message.role === 'user';
   const isError = message.role === 'error';
 
-  // Traducción de métricas al español
   const translateMetric = (key) => {
     const translations = {
       'query_number': 'Consulta Número',
@@ -21,7 +20,6 @@ const ChatMessage = ({ message, onSourceClick }) => {
     return translations[key] || key.replace(/_/g, ' ');
   };
 
-  // Formatear valores de métricas
   const formatMetricValue = (key, value) => {
     if (key === 'context_used') {
       return value ? 'Sí (usado)' : 'No (sin RAG)';
@@ -30,11 +28,9 @@ const ChatMessage = ({ message, onSourceClick }) => {
       return value === 'brief' ? 'Breve' : value === 'extended' ? 'Extendido' : value;
     }
     if (typeof value === 'number') {
-      // Usar decimales para latencia, costos y scores de relevancia
       if (key === 'latency_ms' || key === 'cost' || key === 'avg_relevance_score') {
         return value.toFixed(4);
       }
-      // Para contadores (query_number, sources_found, tokens_used), mostrar enteros
       return Math.round(value).toString();
     }
     return value;

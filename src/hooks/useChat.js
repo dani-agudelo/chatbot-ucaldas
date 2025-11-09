@@ -82,7 +82,7 @@ export const useChat = (initialThreadId = null, externalConfig = null) => {
       // Agregar mensaje de error
       setMessages(prev => [...prev, {
         role: 'error',
-        content: `❌ Error: ${errorMessage}`,
+        content: `Error: ${errorMessage}`,
         timestamp: new Date().toISOString(),
       }]);
       
@@ -90,7 +90,7 @@ export const useChat = (initialThreadId = null, externalConfig = null) => {
     } finally {
       setIsLoading(false);
     }
-  }, [threadId, config]);
+  }, [threadId, config, setMessages]);
 
   /**
    * Limpia el historial de chat
