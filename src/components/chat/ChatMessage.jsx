@@ -14,8 +14,7 @@ const ChatMessage = ({ message, onSourceClick }) => {
       'model': 'Modelo',
       'latency_ms': 'Latencia (ms)',
       'tokens_used': 'Tokens Usados',
-      'cost': 'Costo Estimado',
-      'avg_relevance_score': 'Relevancia Promedio'
+      'cost': 'Costo Estimado'
     };
     return translations[key] || key.replace(/_/g, ' ');
   };
@@ -28,7 +27,7 @@ const ChatMessage = ({ message, onSourceClick }) => {
       return value === 'brief' ? 'Breve' : value === 'extended' ? 'Extendido' : value;
     }
     if (typeof value === 'number') {
-      if (key === 'latency_ms' || key === 'cost' || key === 'avg_relevance_score') {
+      if (key === 'latency_ms' || key === 'cost') {
         return value.toFixed(4);
       }
       return Math.round(value).toString();

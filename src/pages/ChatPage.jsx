@@ -178,9 +178,6 @@ const ChatPage = () => {
                 <span className="material-symbols-outlined text-primary text-3xl">description</span>
                 <div>
                   <p className="font-bold text-gray-900 dark:text-white">{selectedSource.document}</p>
-                  {selectedSource.page && (
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Página {selectedSource.page}</p>
-                  )}
                 </div>
               </div>
 
@@ -191,53 +188,6 @@ const ChatPage = () => {
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                       {selectedSource.excerpt}
                     </p>
-                  </div>
-                </div>
-              )}
-
-              {selectedSource.relevance_score !== undefined && (
-                <div>
-                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Relevancia:</p>
-                  <div className="bg-gray-100 dark:bg-gray-800/50 rounded-lg px-4 py-3 border border-gray-200 dark:border-gray-700">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Score de similitud</span>
-                      <span className="text-lg font-bold text-primary dark:text-white">
-                        {selectedSource.relevance_score.toFixed(2)}
-                      </span>
-                    </div>
-                    
-                    {/* Interpretación visual del score */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-xs">
-                        <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full transition-all ${
-                              selectedSource.relevance_score >= 30 ? 'bg-green-500' :
-                              selectedSource.relevance_score >= 20 ? 'bg-yellow-500' :
-                              selectedSource.relevance_score >= 10 ? 'bg-orange-500' :
-                              'bg-red-500'
-                            }`}
-                            style={{ 
-                              width: `${Math.min(100, (selectedSource.relevance_score / 40) * 100)}%` 
-                            }}
-                          ></div>
-                        </div>
-                        <span className={`font-medium ${
-                          selectedSource.relevance_score >= 30 ? 'text-green-600 dark:text-green-400' :
-                          selectedSource.relevance_score >= 20 ? 'text-yellow-600 dark:text-yellow-400' :
-                          selectedSource.relevance_score >= 10 ? 'text-orange-600 dark:text-orange-400' :
-                          'text-red-600 dark:text-red-400'
-                        }`}>
-                          {selectedSource.relevance_score >= 30 ? 'Alta' :
-                           selectedSource.relevance_score >= 20 ? 'Buena' :
-                           selectedSource.relevance_score >= 10 ? 'Moderada' :
-                           'Baja'}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-500">
-                        Mayor valor = mayor similitud con tu pregunta
-                      </p>
-                    </div>
                   </div>
                 </div>
               )}

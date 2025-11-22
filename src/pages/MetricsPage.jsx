@@ -1,6 +1,7 @@
 import React from 'react';
 import { useMetrics } from '../hooks/useMetrics';
 import StatsGrid from '../components/metrics/StatsGrid';
+import MetricsDashboard from '../components/metrics/MetricsDashboard';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -142,6 +143,11 @@ const MetricsPage = () => {
             </Badge>
           </div>
         </div>
+      </div>
+
+      {/* Dashboard de Métricas del CSV */}
+      <div className="mt-8">
+        <MetricsDashboard />
       </div>
     </div>
   );

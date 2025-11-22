@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor para logging
 api.interceptors.request.use(
   config => {
     console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
@@ -33,10 +32,6 @@ api.interceptors.response.use(
   }
 );
 
-// ============================================================================
-// CHAT API
-// ============================================================================
-
 export const chatAPI = {
   /**
    * Envía un mensaje al chatbot
@@ -45,27 +40,7 @@ export const chatAPI = {
     const response = await api.post('/api/chat/', data);
     return response.data;
   },
-  
-  /**
-   * Obtiene el historial de una conversación
-   */
-  getHistory: async (threadId) => {
-    const response = await api.get(`/api/chat/history/${threadId}`);
-    return response.data;
-  },
-  
-  /**
-   * Elimina el historial de una conversación
-   */
-  deleteHistory: async (threadId) => {
-    const response = await api.delete(`/api/chat/history/${threadId}`);
-    return response.data;
-  },
 };
-
-// ============================================================================
-// SYSTEM API
-// ============================================================================
 
 export const systemAPI = {
   /**
@@ -94,7 +69,21 @@ export const systemAPI = {
 };
 
 // ============================================================================
-// DOCUMENTS API (Placeholders para Fase 2)
+// METRICS API
+// ============================================================================
+
+export const metricsAPI = {
+  /**
+   * Obtiene métricas detalladas del reporte CSV
+   */
+  getReport: async () => {
+    const response = await api.get('/api/metrics/report');
+    return response.data;
+  },
+};
+
+// ============================================================================
+// DOCUMENTS API (para Fase 2)
 // ============================================================================
 
 export const documentsAPI = {

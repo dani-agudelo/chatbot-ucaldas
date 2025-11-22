@@ -16,12 +16,8 @@ const SourceCard = ({ source, onClick }) => {
         <p className="text-sm font-bold text-primary dark:text-white truncate">
           {source.document || 'Documento desconocido'}
         </p>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          {source.page ? `Página ${source.page}` : 'Página no especificada'}
-          {source.relevance_score !== undefined && ` • Relevancia: ${source.relevance_score.toFixed(2)}`}
-        </p>
         {source.excerpt && (
-          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">
+          <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2">
             {source.excerpt}
           </p>
         )}
