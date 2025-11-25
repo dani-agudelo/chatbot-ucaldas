@@ -30,24 +30,27 @@ FROM nginx:alpine
 # Copiar build de React
 COPY --from=builder /app/build /usr/share/nginx/html
 
-# Copiar configuración de nginx (opcional, para SPA)
-RUN echo 'server { \
-    listen 80; \
-    server_name localhost; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    location / { \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Script para configurar nginx con puerto dinámico
+RUN echo '#!/bin/sh\n\
+PORT="${PORT:-80}"\n\
+echo "server {\n\
+    listen $PORT;\n\
+    server_name localhost;\n\
+    root /usr/share/nginx/html;\n\
+    index index.html;\n\
+    location / {\n\
+        try_files \\$uri \\$uri/ /index.html;\n\
+    }\n\
+}" > /etc/nginx/conf.d/default.conf\n\
+nginx -g "daemon off;"' > /start.sh && chmod +x /start.sh
 
 # Exponer puerto
 EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --quiet --tries=1 --spider http://localhost:${PORT:-80}/ || exit 1
 
-# Iniciar nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Iniciar con script que configura puerto dinámico
+CMD ["/bin/sh", "/start.sh"]
 
