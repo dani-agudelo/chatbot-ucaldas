@@ -8,7 +8,9 @@ const Sidebar = ({
   onConfigChange = () => {}, 
   onClearChat = () => {}, 
   onNewChat = () => {}, 
-  apiStatus = 'connected' 
+  apiStatus = 'connected',
+  isOpen = false,
+  onClose = () => {}
 }) => {
   const location = useLocation();
   const { isAdmin } = useAuth();
@@ -24,10 +26,25 @@ const Sidebar = ({
   const visibleNavItems = navItems.filter(item => !item.adminOnly || isAdmin());
 
   return (
-    <aside className="w-72 shrink-0 border-r border-gray-200/80 dark:border-gray-800/80 bg-white/30 dark:bg-background-dark/30 p-4 flex flex-col h-screen">
+    <aside className={`
+      fixed lg:static inset-y-0 left-0 z-50
+      w-72 shrink-0 border-r border-gray-200/80 dark:border-gray-800/80 
+      bg-white dark:bg-background-dark lg:bg-white/30 lg:dark:bg-background-dark/30 
+      p-4 flex flex-col h-screen
+      transform transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
       
-      {/* Espacio para header */}
-      <div className="h-12"></div>
+      {/* Header del sidebar (móvil) */}
+      <div className="h-12 flex items-center justify-between lg:justify-start">
+        <span className="text-lg font-bold text-gray-900 dark:text-white lg:hidden">Menú</span>
+        <button
+          onClick={onClose}
+          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          <span className="material-symbols-outlined text-gray-500">close</span>
+        </button>
+      </div>
 
       {/* Navegación */}
       <nav className="flex flex-col gap-1">
