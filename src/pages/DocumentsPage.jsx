@@ -8,26 +8,35 @@ const DocumentsPage = () => {
   const [showUpload, setShowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
-  const [reloadStatus, setReloadStatus] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const fileInputRef = useRef(null);
   const pollingRef = useRef(null);
+  const isReloadingRef = useRef(false); 
+
+  // Mantener ref sincronizada con state
+  useEffect(() => {
+    isReloadingRef.current = isReloading;
+  }, [isReloading]);
+
+  // Función para detener el polling
+  const stopPolling = useCallback(() => {
+    if (pollingRef.current) {
+      clearInterval(pollingRef.current);
+      pollingRef.current = null;
+    }
+    setIsReloading(false);
+  }, []);
 
   // Polling para verificar estado de recarga
   const checkReloadStatus = useCallback(async () => {
     try {
       const status = await documentsAPI.getReloadStatus();
-      setReloadStatus(status);
+      console.log('📊 Reload status:', status);
       
-      if (!status.in_progress && isReloading) {
-        // La recarga terminó
-        setIsReloading(false);
-        
-        if (pollingRef.current) {
-          clearInterval(pollingRef.current);
-          pollingRef.current = null;
-        }
+      // Si ya no está en progreso, parar el polling
+      if (!status.in_progress) {
+        stopPolling();
         
         if (status.last_error) {
           Swal.fire({
@@ -35,7 +44,8 @@ const DocumentsPage = () => {
             title: 'Error al recargar',
             text: status.last_error,
           });
-        } else {
+        } else if (status.finished_at) {
+          // Solo mostrar éxito si realmente terminó (tiene finished_at)
           Swal.fire({
             icon: 'success',
             title: '¡Documentos recargados!',
@@ -52,8 +62,9 @@ const DocumentsPage = () => {
       }
     } catch (error) {
       console.error('Error checking reload status:', error);
+      stopPolling();
     }
-  }, [isReloading]);
+  }, [stopPolling]);
 
   // Limpiar polling al desmontar
   useEffect(() => {
@@ -82,9 +93,10 @@ const DocumentsPage = () => {
       setIsReloading(true);
       try {
         const response = await documentsAPI.reload();
+        console.log('📤 Reload response:', response);
         
         if (response.status === 'in_progress') {
-          // Ya hay una recarga en progreso
+          // Ya hay una recarga en progreso, mantener el estado
           Swal.fire({
             icon: 'info',
             title: 'Recarga en progreso',
@@ -92,6 +104,10 @@ const DocumentsPage = () => {
             timer: 3000,
             showConfirmButton: false,
           });
+          // Iniciar polling para monitorear la recarga existente
+          if (!pollingRef.current) {
+            pollingRef.current = setInterval(checkReloadStatus, 3000);
+          }
         } else if (response.status === 'started') {
           // Iniciar polling para verificar cuando termine
           Swal.fire({
@@ -107,8 +123,18 @@ const DocumentsPage = () => {
           
           // Polling cada 3 segundos
           pollingRef.current = setInterval(checkReloadStatus, 3000);
+        } else if (!response.success) {
+          // Error o ya en progreso con success=false
+          setIsReloading(false);
+          Swal.fire({
+            icon: 'warning',
+            title: 'No se pudo iniciar',
+            text: response.message || 'Intenta de nuevo',
+            timer: 2500,
+            showConfirmButton: false,
+          });
         } else {
-          // Respuesta inmediata (no debería pasar pero por si acaso)
+          // Respuesta inmediata exitosa 
           setIsReloading(false);
           Swal.fire({
             icon: 'success',
@@ -120,6 +146,7 @@ const DocumentsPage = () => {
         }
       } catch (error) {
         setIsReloading(false);
+        stopPolling();
         Swal.fire({
           icon: 'error',
           title: 'Error al recargar',
@@ -331,21 +358,20 @@ const DocumentsPage = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Documentos Disponibles</h2>
           <div className="flex items-center gap-3">
-            {isReloading && (
-              <span className="text-sm text-primary animate-pulse flex items-center gap-2">
-                <span className="material-symbols-outlined text-sm animate-spin">sync</span>
-                Procesando en background...
-              </span>
+            {isReloading ? (
+              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-lg border border-primary/20">
+                <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-sm text-primary font-medium">Procesando...</span>
+              </div>
+            ) : (
+              <Button
+                icon="refresh"
+                onClick={handleReloadRAG}
+                variant="secondary"
+              >
+                Recargar en RAG
+              </Button>
             )}
-            <Button
-              icon={isReloading ? "hourglass_empty" : "refresh"}
-              onClick={handleReloadRAG}
-              variant="secondary"
-              disabled={isReloading}
-              className={isReloading ? "opacity-50 cursor-not-allowed" : ""}
-            >
-              {isReloading ? "En proceso..." : "Recargar en RAG"}
-            </Button>
           </div>
         </div>
         <DocumentList refreshKey={refreshKey} />
