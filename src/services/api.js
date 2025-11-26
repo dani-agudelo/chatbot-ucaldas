@@ -138,10 +138,18 @@ export const documentsAPI = {
   },
 
   /**
-   * Recarga los documentos en el RAG
+   * Inicia la recarga de documentos en el RAG (en background)
    */
   reload: async () => {
     const response = await api.post('/api/documents/reload');
+    return response.data;
+  },
+
+  /**
+   * Consulta el estado de la recarga en background
+   */
+  getReloadStatus: async () => {
+    const response = await api.get('/api/documents/reload/status');
     return response.data;
   },
 };

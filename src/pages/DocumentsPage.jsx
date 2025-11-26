@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import DocumentList from '../components/documents/DocumentList';
 import Button from '../components/ui/Button';
 import { documentsAPI } from '../services/api';
@@ -8,16 +8,68 @@ const DocumentsPage = () => {
   const [showUpload, setShowUpload] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isReloading, setIsReloading] = useState(false);
+  const [reloadStatus, setReloadStatus] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
   const fileInputRef = useRef(null);
+  const pollingRef = useRef(null);
+
+  // Polling para verificar estado de recarga
+  const checkReloadStatus = useCallback(async () => {
+    try {
+      const status = await documentsAPI.getReloadStatus();
+      setReloadStatus(status);
+      
+      if (!status.in_progress && isReloading) {
+        // La recarga terminó
+        setIsReloading(false);
+        
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current);
+          pollingRef.current = null;
+        }
+        
+        if (status.last_error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al recargar',
+            text: status.last_error,
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Documentos recargados!',
+            html: `
+              <p>Base de conocimiento actualizada</p>
+              <p class="text-sm text-gray-500 mt-2">
+                ${status.last_result?.message || 'Procesamiento completado'}
+              </p>
+            `,
+            timer: 3000,
+            showConfirmButton: false,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error checking reload status:', error);
+    }
+  }, [isReloading]);
+
+  // Limpiar polling al desmontar
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, []);
 
   const handleReloadRAG = async () => {
     const result = await Swal.fire({
       title: '¿Recargar documentos en RAG?',
       html: `
         <p class="text-sm text-gray-600">Esto procesará todos los documentos y actualizará la base de conocimiento.</p>
-        <p class="text-xs text-yellow-600 mt-2">⚠️ Puede tomar unos segundos</p>
+        <p class="text-xs text-blue-600 mt-2">ℹ️ El proceso se ejecutará en segundo plano</p>
       `,
       icon: 'question',
       showCancelButton: true,
@@ -30,21 +82,49 @@ const DocumentsPage = () => {
       setIsReloading(true);
       try {
         const response = await documentsAPI.reload();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Documentos recargados!',
-          text: response.message || 'Base de conocimiento actualizada',
-          timer: 2500,
-          showConfirmButton: false,
-        });
+        
+        if (response.status === 'in_progress') {
+          // Ya hay una recarga en progreso
+          Swal.fire({
+            icon: 'info',
+            title: 'Recarga en progreso',
+            text: response.message,
+            timer: 3000,
+            showConfirmButton: false,
+          });
+        } else if (response.status === 'started') {
+          // Iniciar polling para verificar cuando termine
+          Swal.fire({
+            icon: 'info',
+            title: 'Procesando documentos...',
+            html: `
+              <p>${response.message}</p>
+              <p class="text-sm text-gray-500 mt-2">Puedes seguir usando la aplicación mientras se procesa.</p>
+            `,
+            timer: 3000,
+            showConfirmButton: false,
+          });
+          
+          // Polling cada 3 segundos
+          pollingRef.current = setInterval(checkReloadStatus, 3000);
+        } else {
+          // Respuesta inmediata (no debería pasar pero por si acaso)
+          setIsReloading(false);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Documentos recargados!',
+            text: response.message || 'Base de conocimiento actualizada',
+            timer: 2500,
+            showConfirmButton: false,
+          });
+        }
       } catch (error) {
+        setIsReloading(false);
         Swal.fire({
           icon: 'error',
           title: 'Error al recargar',
           text: error.response?.data?.detail || 'Error desconocido',
         });
-      } finally {
-        setIsReloading(false);
       }
     }
   };
@@ -250,15 +330,23 @@ const DocumentsPage = () => {
       <div className="rounded-xl bg-white dark:bg-surface-dark p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Documentos Disponibles</h2>
-          <Button
-            icon={isReloading ? "sync" : "refresh"}
-            onClick={handleReloadRAG}
-            variant="secondary"
-            disabled={isReloading}
-            className={isReloading ? "animate-pulse" : ""}
-          >
-            {isReloading ? "Procesando..." : "Recargar en RAG"}
-          </Button>
+          <div className="flex items-center gap-3">
+            {isReloading && (
+              <span className="text-sm text-primary animate-pulse flex items-center gap-2">
+                <span className="material-symbols-outlined text-sm animate-spin">sync</span>
+                Procesando en background...
+              </span>
+            )}
+            <Button
+              icon={isReloading ? "hourglass_empty" : "refresh"}
+              onClick={handleReloadRAG}
+              variant="secondary"
+              disabled={isReloading}
+              className={isReloading ? "opacity-50 cursor-not-allowed" : ""}
+            >
+              {isReloading ? "En proceso..." : "Recargar en RAG"}
+            </Button>
+          </div>
         </div>
         <DocumentList refreshKey={refreshKey} />
       </div>
