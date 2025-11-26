@@ -7,7 +7,6 @@ import { useChatContext } from '../../context/ChatContext';
 
 const MainLayout = () => {
   const [apiStatus, setApiStatus] = useState('checking');
-  const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { config, updateConfig, clearChat, newChat } = useChatContext();
   const location = useLocation();
@@ -57,7 +56,6 @@ const MainLayout = () => {
       
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header 
-          onSettingsClick={() => setShowSettings(!showSettings)} 
           onMenuClick={() => setSidebarOpen(!sidebarOpen)}
           sidebarOpen={sidebarOpen}
         />
@@ -66,30 +64,6 @@ const MainLayout = () => {
           <Outlet />
         </main>
       </div>
-
-      {/* Modal de configuración (placeholder) */}
-      {showSettings && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
-          onClick={() => setShowSettings(false)}
-        >
-          <div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-xl font-bold mb-4">Configuración</h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              Configuraciones globales (próximamente)
-            </p>
-            <button 
-              onClick={() => setShowSettings(false)}
-              className="w-full py-2 px-4 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

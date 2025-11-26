@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { APP_NAME, UNIVERSITY_NAME } from '../../utils/constants';
 import { useAuth } from '../../context/AuthContext';
 
-const Header = ({ onSettingsClick, onMenuClick, sidebarOpen }) => {
+const Header = ({ onMenuClick, sidebarOpen }) => {
   const { user, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -54,16 +54,7 @@ const Header = ({ onSettingsClick, onMenuClick, sidebarOpen }) => {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
-        {/* Botón de configuración */}
-        <button 
-          onClick={onSettingsClick}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-          aria-label="Configuración"
-        >
-          <span className="material-symbols-outlined text-xl">settings</span>
-        </button>
-
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Admin section */}
         {isAdmin() ? (
           <div className="flex items-center gap-1 sm:gap-2">
