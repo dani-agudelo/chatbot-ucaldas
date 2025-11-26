@@ -67,17 +67,17 @@ const ChatPage = () => {
     <div className="flex flex-1 flex-col h-full">
       <div 
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-6 space-y-6 scroll-smooth"
+        className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6 scroll-smooth"
       >
         {showWelcome && (
-          <div className="flex h-full items-center justify-center animate-fadeIn">
-            <div className="text-center max-w-2xl px-4">
+          <div className="flex h-full items-center justify-center animate-fadeIn py-4 sm:py-0">
+            <div className="text-center max-w-2xl px-2 sm:px-4">
               {/* Logo de la Universidad */}
-              <div className="mx-auto mb-6 flex items-center justify-center">
+              <div className="mx-auto mb-3 sm:mb-6 flex items-center justify-center">
                 <img 
                   src="/assets/logo-uc.png" 
                   alt="Universidad de Caldas" 
-                  className="w-24 h-24 object-contain"
+                  className="w-16 h-16 sm:w-24 sm:h-24 object-contain"
                   onError={(e) => {
                     // Fallback: intentar SVG si PNG falla
                     if (e.target.src.includes('.png')) {
@@ -90,18 +90,18 @@ const ChatPage = () => {
                   }}
                 />
                 {/* Fallback icon si no hay logo */}
-                <div className="hidden h-16 w-16 rounded-full bg-primary/10 items-center justify-center">
-                  <span className="material-symbols-outlined text-primary text-4xl">smart_toy</span>
+                <div className="hidden h-12 w-12 sm:h-16 sm:w-16 rounded-full bg-primary/10 items-center justify-center">
+                  <span className="material-symbols-outlined text-primary text-3xl sm:text-4xl">smart_toy</span>
                 </div>
               </div>
               
-              <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+              <h2 className="text-xl sm:text-3xl font-bold mb-2 sm:mb-4 text-gray-900 dark:text-white">
                 Bienvenido al Asistente Académico
               </h2>
-              <p className="text-base text-gray-500 dark:text-gray-500 mb-6">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-500 mb-4 sm:mb-6">
                 Puedo ayudarte con preguntas sobre:
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto">
+              <div className="grid grid-cols-2 gap-2 sm:gap-4 max-w-xl mx-auto">
                 {[
                   { icon: 'school', text: 'Políticas educativas' },
                   { icon: 'policy', text: 'Regulaciones de IA' },
@@ -110,16 +110,13 @@ const ChatPage = () => {
                 ].map((item, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-3 p-4 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
+                    className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700"
                   >
-                    <span className="material-symbols-outlined text-primary text-2xl">{item.icon}</span>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{item.text}</span>
+                    <span className="material-symbols-outlined text-primary text-xl sm:text-2xl">{item.icon}</span>
+                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">{item.text}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-8">
-                Escribe tu pregunta abajo para comenzar...
-              </p>
             </div>
           </div>
         )}

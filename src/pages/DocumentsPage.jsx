@@ -226,19 +226,20 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-8">
+    <div className="p-3 sm:p-4 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Gestión de Documentos</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Fuentes de información del chatbot</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">Gestión de Documentos</h1>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-1">Fuentes de información del chatbot</p>
         </div>
         <Button 
           icon={showUpload ? "close" : "upload"}
           onClick={() => setShowUpload(!showUpload)}
           variant={showUpload ? "secondary" : "primary"}
+          className="self-start sm:self-auto"
         >
-          {showUpload ? "Cancelar" : "Subir Documento"}
+          {showUpload ? "Cancelar" : "Subir"}
         </Button>
       </div>
 
