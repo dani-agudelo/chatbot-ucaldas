@@ -320,7 +320,7 @@ const DocumentsPage = () => {
             {
               icon: 'search',
               title: '1. Búsqueda Semántica',
-              description: 'El sistema busca los 4 fragmentos más relevantes usando embeddings y similitud semántica.'
+              description: 'El sistema busca los fragmentos más relevantes usando embeddings y similitud semántica.'
             },
             {
               icon: 'dataset',
