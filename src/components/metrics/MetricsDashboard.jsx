@@ -331,35 +331,6 @@ const MetricsDashboard = () => {
         </div>
       </div>
 
-      {/* Top threads */}
-      {data.top_threads && data.top_threads.length > 0 && (
-        <div className="rounded-xl bg-white dark:bg-surface-dark p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">forum</span>
-            Conversaciones Más Activas
-          </h3>
-          <div className="space-y-2">
-            {data.top_threads.map((thread, idx) => (
-              <div
-                key={idx}
-                className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                    #{idx + 1}
-                  </span>
-                  <code className="text-xs text-gray-600 dark:text-gray-300 font-mono">
-                    {thread.thread_id.substring(0, 20)}...
-                  </code>
-                </div>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {thread.interactions} interacciones
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

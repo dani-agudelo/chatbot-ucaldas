@@ -10,27 +10,47 @@ const api = axios.create({
   },
 });
 
+// Interceptor para agregar token de admin a las peticiones
 api.interceptors.request.use(
   config => {
-    console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`);
+    const token = localStorage.getItem('admin_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   error => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-  response => {
-    console.log(`[API Response] ${response.status} ${response.config.url}`);
-    return response;
-  },
+  response => response,
   error => {
-    console.error('[API Error]:', error.message);
-    if (error.response) {
-      console.error('Response data:', error.response.data);
+    if (error.response?.status === 401) {
+      localStorage.removeItem('admin_token');
     }
     return Promise.reject(error);
   }
 );
+
+// ============================================================================
+// AUTH API (Solo para administradores)
+// ============================================================================
+
+export const authAPI = {
+  login: async (email, password) => {
+    const response = await api.post('/api/auth/login', { email, password });
+    return response.data;
+  },
+
+  getMe: async () => {
+    const response = await api.get('/api/auth/me');
+    return response.data;
+  },
+};
+
+// ============================================================================
+// CHAT API
+// ============================================================================
 
 export const chatAPI = {
   /**
@@ -83,7 +103,7 @@ export const metricsAPI = {
 };
 
 // ============================================================================
-// DOCUMENTS API (para Fase 2)
+// DOCUMENTS API
 // ============================================================================
 
 export const documentsAPI = {
@@ -91,15 +111,14 @@ export const documentsAPI = {
    * Lista todos los documentos
    */
   list: async () => {
-    // TODO: Implementar en Fase 2
-    return { documents: [] };
+    const response = await api.get('/api/documents/list');
+    return response.data;
   },
   
   /**
    * Sube un nuevo documento
    */
   upload: async (file) => {
-    // TODO: Implementar en Fase 2
     const formData = new FormData();
     formData.append('file', file);
     const response = await api.post('/api/documents/upload', formData, {
@@ -107,6 +126,22 @@ export const documentsAPI = {
         'Content-Type': 'multipart/form-data',
       },
     });
+    return response.data;
+  },
+
+  /**
+   * Elimina un documento
+   */
+  delete: async (filename) => {
+    const response = await api.delete(`/api/documents/${encodeURIComponent(filename)}`);
+    return response.data;
+  },
+
+  /**
+   * Recarga los documentos en el RAG
+   */
+  reload: async () => {
+    const response = await api.post('/api/documents/reload');
     return response.data;
   },
 };
