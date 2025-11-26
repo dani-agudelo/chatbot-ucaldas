@@ -37,52 +37,52 @@ const ChatMessage = ({ message, onSourceClick }) => {
 
   if (isError) {
     return (
-      <div className="flex items-start gap-3 animate-fadeIn">
-        <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined text-red-600 dark:text-red-400">error</span>
+      <div className="flex items-start gap-2 sm:gap-3 animate-fadeIn">
+        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center shrink-0">
+          <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-lg sm:text-xl">error</span>
         </div>
-        <div className="flex-1 max-w-2xl rounded-lg px-4 py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
-          <p className="text-sm text-red-800 dark:text-red-300">{message.content}</p>
+        <div className="flex-1 min-w-0 rounded-lg px-3 py-2 sm:px-4 sm:py-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <p className="text-sm text-red-800 dark:text-red-300 break-words">{message.content}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`flex items-start gap-3 animate-fadeIn ${isUser ? 'flex-row-reverse' : ''}`}>
+    <div className={`flex items-start gap-2 sm:gap-3 animate-fadeIn ${isUser ? 'flex-row-reverse' : ''}`}>
       {/* Avatar */}
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
+      <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 ${
         isUser 
           ? 'bg-gray-200 dark:bg-gray-700' 
           : 'bg-primary/10 dark:bg-primary/20'
       }`}>
-        <span className={`material-symbols-outlined ${
+        <span className={`material-symbols-outlined text-lg sm:text-xl ${
           isUser ? 'text-gray-700 dark:text-gray-300' : 'text-primary'
         }`}>
           {isUser ? 'person' : 'smart_toy'}
         </span>
       </div>
 
-      <div className={`flex flex-1 flex-col gap-2 ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className={`flex flex-1 min-w-0 flex-col gap-1.5 sm:gap-2 ${isUser ? 'items-end' : 'items-start'}`}>
         {/* Label */}
         <p className="text-xs text-gray-500 dark:text-gray-400 px-1">
           {isUser ? 'Tú' : 'Asistente'}
         </p>
 
         {/* Message content */}
-        <div className={`max-w-2xl rounded-lg px-4 py-3 shadow-sm ${
+        <div className={`max-w-full sm:max-w-[90%] lg:max-w-2xl rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-sm ${
           isUser 
             ? 'bg-primary text-white' 
             : 'bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700'
         }`}>
-          <p className="text-base leading-relaxed whitespace-pre-wrap">
+          <p className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words overflow-hidden">
             {message.content}
           </p>
         </div>
 
         {/* Sources */}
         {message.sources && message.sources.length > 0 && (
-          <div className="max-w-2xl w-full space-y-2">
+          <div className="max-w-full sm:max-w-[90%] lg:max-w-2xl w-full space-y-2">
             <p className="text-xs text-gray-500 dark:text-gray-400 px-1">
               Fuentes citadas ({message.sources.length})
             </p>
@@ -98,17 +98,17 @@ const ChatMessage = ({ message, onSourceClick }) => {
 
         {/* Metrics */}
         {message.metrics && Object.keys(message.metrics).length > 0 && (
-          <details className="max-w-2xl w-full">
+          <details className="max-w-full sm:max-w-[90%] lg:max-w-2xl w-full">
             <summary className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 px-1 py-1">
               Ver métricas
             </summary>
-            <div className="mt-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs space-y-1">
+            <div className="mt-2 p-2 sm:p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs space-y-1">
               {Object.entries(message.metrics).map(([key, value]) => (
-                <div key={key} className="flex justify-between gap-4">
-                  <span className="text-gray-600 dark:text-gray-400">
+                <div key={key} className="flex justify-between gap-2 sm:gap-4">
+                  <span className="text-gray-600 dark:text-gray-400 truncate">
                     {translateMetric(key)}:
                   </span>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <span className="font-medium text-gray-900 dark:text-gray-100 shrink-0">
                     {formatMetricValue(key, value)}
                   </span>
                 </div>

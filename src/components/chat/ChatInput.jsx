@@ -31,7 +31,7 @@ const ChatInput = ({ onSend, disabled = false }) => {
   };
 
   return (
-    <div className="p-6 pt-4 border-t border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-background-dark/50 backdrop-blur-sm">
+    <div className="p-3 sm:p-6 sm:pt-4 border-t border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-background-dark/50 backdrop-blur-sm">
       <form onSubmit={handleSubmit} className="relative">
         <textarea
           ref={textareaRef}
@@ -40,16 +40,16 @@ const ChatInput = ({ onSend, disabled = false }) => {
           onKeyDown={handleKeyDown}
           disabled={disabled}
           rows={1}
-          placeholder="Escribe tu pregunta sobre Inteligencia Artificial..."
-          className="w-full min-h-[56px] max-h-[200px] pl-5 pr-16 py-4 rounded-xl border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-shadow disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+          placeholder="Escribe tu pregunta..."
+          className="w-full min-h-[48px] sm:min-h-[56px] max-h-[150px] sm:max-h-[200px] pl-3 sm:pl-5 pr-14 sm:pr-16 py-3 sm:py-4 text-sm sm:text-base rounded-xl border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-shadow disabled:opacity-50 disabled:cursor-not-allowed resize-none"
           style={{ lineHeight: '1.5' }}
         />
         <button
           type="submit"
           disabled={disabled || !input.trim()}
-          className="absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
+          className="absolute right-2 sm:right-3 bottom-2 sm:bottom-3 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary"
         >
-          <span className="material-symbols-outlined">send</span>
+          <span className="material-symbols-outlined text-lg sm:text-xl">send</span>
         </button>
       </form>
     </div>

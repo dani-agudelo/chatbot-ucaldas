@@ -67,16 +67,44 @@ const MetricsDashboard = () => {
 
   if (!data || data.total_interactions === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
-          <span className="material-symbols-outlined text-gray-400 text-4xl">bar_chart</span>
+      <div className="rounded-xl bg-white dark:bg-surface-dark p-6 sm:p-8 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="text-center py-6 sm:py-8">
+          <div className="mx-auto flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 mb-4">
+            <span className="material-symbols-outlined text-primary text-3xl sm:text-4xl">analytics</span>
+          </div>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Dashboard de Métricas
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 max-w-md mx-auto">
+            Las métricas se generan automáticamente cuando los usuarios interactúan con el chatbot
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-gray-400">
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">chat</span>
+              <span>Interacciones</span>
+            </div>
+            <div className="hidden sm:block">•</div>
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">speed</span>
+              <span>Latencia</span>
+            </div>
+            <div className="hidden sm:block">•</div>
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">token</span>
+              <span>Tokens</span>
+            </div>
+            <div className="hidden sm:block">•</div>
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-sm">attach_money</span>
+              <span>Costos</span>
+            </div>
+          </div>
+          <div className="mt-6 p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg max-w-sm mx-auto">
+            <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300">
+              💡 Envía mensajes al chatbot para comenzar a generar métricas
+            </p>
+          </div>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          No hay métricas disponibles
-        </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Aún no se han registrado interacciones
-        </p>
       </div>
     );
   }
